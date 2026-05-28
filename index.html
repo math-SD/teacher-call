@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교무실 선생님 호출 시스템</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f8f9fa;
+        }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        .sub-title {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        /* 가로 5개씩 예쁘게 정렬되는 그리드 */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 850px;
+        }
+        button {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        button:active {
+            transform: scale(0.95);
+            background-color: #f0f0f0;
+        }
+        .class-no {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+        .teacher-name {
+            font-size: 1.15rem;
+            color: #333;
+        }
+        /* 특별 요청 버튼 (가로로 예쁘게 나누어 배치) */
+        .special-button {
+            grid-column: span 2;
+            margin-top: 25px;
+            background-color: #e67e22;
+            color: white;
+            padding: 20px;
+        }
+        .special-button .teacher-name {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* 스마트폰 버튼은 색상을 조금 다르게 해서 구분감을 주면 더 좋아요! (선택사항) */
+        .phone-btn {
+            background-color: #2c3e50; 
+        }
+
+        /* 모바일 화면에서는 버튼이 아래로 나란히 떨어지도록 설정 */
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .special-button {
+                grid-column: 1 / span 3; /* 모바일에서는 각각 한 줄씩 꽉 차게 */
+            }
+        }
+
+        /* 모바일이나 작은 화면에서는 가로 3개로 자동 조절 */
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .special-button {
+                grid-column: span 2;
+            }
+        }
+        footer {
+            margin-top: 50px;
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+    </style>
+    <script>
+        // 카카오톡이나 네이버 앱 등 인앱 브라우저로 열면 외부 크롬 브라우저로 강제 이동시켜 줍니다 (소리 오류 방지)
+        if (navigator.userAgent.match(/KAKAOTALK/i)) {
+            location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(window.location.href);
+        }
+    </script>
+</head>
+<body>
+
+    <h1>🔔 교무실 선생님 호출</h1>
+    <p class="sub-title">찾으시는 선생님의 버튼을 눌러주세요.</p>
+
+    <div class="container" id="button-container">
+        </div>
+
+    <footer>© Our School Teachers Call System</footer>
+
+    <script>
+        // ★ 우리 학년/교무실 선생님 명단으로 자유롭게 수정하세요!
+        const teachers = [
+            { class: "체육", name: "강대권" },
+            { class: "역사", name: "김동현" },
+            { class: "무용", name: "김두리" },
+            { class: "국어", name: "김보영" },
+            { class: "수학", name: "김하경" },
+            { class: "음악", name: "박유미" },
+            { class: "사회역사", name: "신정승" },
+            { class: "국어", name: "우형기" },
+            { class: "영어", name: "유선상" },
+            { class: "도덕", name: "유혜영" },
+            { class: "영어", name: "이선" },
+            { class: "사회", name: "이선영" },
+            { class: "미술", name: "이은정" },
+            { class: "수학", name: "이혜수" },
+            { class: "기술가정", name: "이혜영" },
+            { class: "중국어", name: "임소연" },
+            { class: "과학", name: "전기봉" },
+            { class: "체육", name: "정기달" },
+            { class: "정보", name: "한송이" },
+            { class: "과학", name: "허은경" },
+            { class: "영어", name: "황윤희" }
+        ];
+
+        const container = document.getElementById('button-container');
+
+        // 선생님 버튼 생성
+        teachers.forEach(t => {
+            const btn = document.createElement('button');
+            btn.innerHTML = `<span class="class-no">${t.class}</span><span class="teacher-name">${t.name}</span>`;
+            btn.onclick = () => speak(`${t.class} ${t.name} 선생님, 학생이 호출했습니다.`);
+            container.appendChild(btn);
+        });
+
+        // 하단 특별 요청 버튼 (예: 열쇠, 교과서 제출 등)
+        // [수정된 코드] 하단 특별 요청 버튼 2개 생성 구역
+
+        // 1. 특별실 열쇠 요청 버튼
+        const keyBtn = document.createElement('button');
+        keyBtn.className = 'special-button'; // 주황색 버튼
+        keyBtn.innerHTML = `<span class="teacher-name">🔑 특별실 열쇠 요청</span><span>특별실 열쇠를 받고 싶습니다.</span>`;
+        keyBtn.onclick = () => speak("선생님, 특별실 열쇠를 받으러 학생이 왔습니다.");
+        container.appendChild(keyBtn);
+
+        // 2. 스마트폰 요청 버튼
+        const phoneBtn = document.createElement('button');
+        phoneBtn.className = 'special-button phone-btn'; // 네이비색 버튼 (스타일에서 구분)
+        phoneBtn.innerHTML = `<span class="teacher-name">📱 스마트폰 불출 요청</span><span>스마트폰 수령을 요청합니다.</span>`;
+        phoneBtn.onclick = () => speak("선생님, 스마트폰을 받으러 학생이 왔습니다.");
+        container.appendChild(phoneBtn);
+
+        // 크롬 음성 합성(TTS) 함수
+        function speak(text) {
+            window.speechSynthesis.cancel(); // 현재 말하고 있는 게 있다면 멈추고 새로 시작
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ko-KR'; // 한국어 설정
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>
