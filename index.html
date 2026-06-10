@@ -154,7 +154,7 @@
         teachers.forEach(t => {
             const btn = document.createElement('button');
             btn.innerHTML = `<span class="class-no">${t.class}</span><span class="teacher-name">${t.name}</span>`;
-            btn.onclick = () => speak(`${t.class}, ${t.class}! ${t.name} 선생님, 학생이 호출했습니다.`);
+            btn.onclick = () => speak(`${t.class}, ${t.class}! ${t.name} 선생님, 학생이 애타게 찾고 있습니다.`);
             container.appendChild(btn);
         });
 
@@ -165,7 +165,7 @@
         const keyBtn = document.createElement('button');
         keyBtn.className = 'special-button'; // 주황색 버튼
         keyBtn.innerHTML = `<span class="teacher-name">🔑 특별실 열쇠 요청</span><span>특별실 열쇠를 받고 싶습니다.</span>`;
-        keyBtn.onclick = () => speak("선생님, 특별실 열쇠를 받으러 학생이 왔습니다.");
+        keyBtn.onclick = () => speak("선생님, 특별실 열쇠를 받으러 왔습니다.");
         container.appendChild(keyBtn);
 
         // 2. 스마트폰 요청 버튼
