@@ -154,7 +154,7 @@
         teachers.forEach(t => {
             const btn = document.createElement('button');
             btn.innerHTML = `<span class="class-no">${t.class}</span><span class="teacher-name">${t.name}</span>`;
-            btn.onclick = () => speak(`${t.class}, ${t.class}, ${t.name}! ${t.name} 선생님, 학생이 찾고 있습니다.`);
+            btn.onclick = () => speak(`${..,,}, ${t.class}, ${t.name}! ${t.name} 선생님, 학생이 찾고 있습니다.`);
             container.appendChild(btn);
         });
 
