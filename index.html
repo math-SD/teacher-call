@@ -154,7 +154,7 @@
         teachers.forEach(t => {
             const btn = document.createElement('button');
             btn.innerHTML = `<span class="class-no">${t.class}</span><span class="teacher-name">${t.name}</span>`;
-            btn.onclick = () => speak(`${t.class}, ${t.class}, ${t.name}! ${t.name} 선생님, 학생이 애타게 찾고 있습니다.`);
+            btn.onclick = () => speak(`${t.class}, ${t.class}, ${t.name}! ${t.name} 선생님, 학생이 찾고 있습니다.`);
             container.appendChild(btn);
         });
 
@@ -178,7 +178,10 @@
         // 크롬 음성 합성(TTS) 함수
         function speak(text) {
             window.speechSynthesis.cancel(); // 현재 말하고 있는 게 있다면 멈추고 새로 시작
-            const utterance = new SpeechSynthesisUtterance(text);
+        // ★ 문장 앞에 마침표와 쉼표를 넣어 약 1~2초간 무음 공백을 만듭니다.
+        // 이 공백 시간 동안 블루투스 스피커가 잠에서 깨어납니다!
+            const delayText = ". . , , " + text; 
+            const utterance = new SpeechSynthesisUtterance (delayText) ;
             utterance.lang = 'ko-KR'; // 한국어 설정
             window.speechSynthesis.speak(utterance);
         }
